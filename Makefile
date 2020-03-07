@@ -4,11 +4,11 @@ SRC=	main.c \
 		thread.c \
 		task.c \
 		thread_pool.c
-CFLAGS=-W -Wall -Werror -Wextra -std=c99
+CFLAGS=-std=c99
 OBJ=$(SRC:%.c=%.o)
 
 all:$(OBJ)
-	$(CC) -o $(NAME) $(OBJ) -lpthread
+	$(CC) -o $(NAME) $(OBJ) -lpthread 
 
 clean:
 	rm -rf $(OBJ)

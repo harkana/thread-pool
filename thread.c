@@ -7,12 +7,16 @@ void    destroy_thread(t_thread *thread)
 
 void    running_thread(t_thread *thread)
 {
-    pthread_mutex_init(&thread->locker, NULL);
     while (thread->pool->initialized)
     {
-        printf("%p\n", thread);
+        t_task  *tasks = pull_task(thread->pool);
+
+        if (tasks)
+        {
+            tasks->handle(tasks->arg);
+            free(tasks);
+        }
     }
-    pthread_mutex_destroy(&thread->locker);
 }
 
 int     init_thread(t_thread_pool *pool, int i)

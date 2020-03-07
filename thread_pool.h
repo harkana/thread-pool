@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <semaphore.h>
 
 typedef struct s_task           t_task;
 typedef struct s_thread         t_thread;
@@ -19,13 +20,11 @@ struct s_thread_pool {
     t_thread        **threads;
     int             len;
     int             nb_tasks;
-};
+ };
 
 struct s_thread {
     pthread_t       tid;
-   // void            (*handle)(struct s_thread *);
     t_thread_pool   *pool;
-    pthread_mutex_t locker;
 };
 
 struct s_task {
@@ -59,7 +58,5 @@ void    destroy_worker(t_task *);
 t_task  *pull_task(t_thread_pool *);
 
 int        counter;
-
 extern int counter;
-
 #endif

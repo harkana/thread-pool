@@ -35,7 +35,7 @@ void    destroy_pool(t_thread_pool *pool)
     int i;
 
     pool->initialized = 0;
-    sleep(1);
+    usleep(100);
     for (i = 0; i < pool->len; i++)
     {
         destroy_thread(pool->threads[i]);

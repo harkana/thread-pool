@@ -13,11 +13,15 @@ int    add_worker(t_thread_pool *pool, void (*handle)(void *), void *arg)
     {
         return (0);
     }
+    task->pool = pool;
     task->handle = handle;
     task->arg = arg;
     task->next = pool->tasks;
     pool->tasks = task;
     pool->nb_tasks++;
+    usleep(1);
+    pthread_cond_signal(&pool->locker.cond);
+    pthread_mutex_unlock(&pool->locker.lock);
     return (1);
 }
 

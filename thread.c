@@ -7,16 +7,26 @@ void    destroy_thread(t_thread *thread)
 
 void    running_thread(t_thread *thread)
 {
+    thread->pool->thread_alive++;
     while (thread->pool->initialized)
     {
-        t_task  *tasks = pull_task(thread->pool);
-
-        if (tasks)
+        thread->pool->thread_working++;
+        pthread_mutex_lock(&thread->pool->locker.lock);
+        pthread_cond_wait(&thread->pool->locker.cond, &thread->pool->locker.lock);
+        if (thread->pool->initialized)
         {
-            tasks->handle(tasks->arg);
-            free(tasks);
+            t_task  *tasks = pull_task(thread->pool);
+
+            if (tasks)
+            {
+                tasks->handle(tasks->arg);
+                pthread_cond_signal(&thread->pool->locker.cond);
+                pthread_mutex_unlock(&thread->pool->locker.lock);
+            }
         }
+        thread->pool->thread_working--;
     }
+    thread->pool->thread_alive--;
 }
 
 int     init_thread(t_thread_pool *pool, int i)

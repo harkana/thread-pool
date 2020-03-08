@@ -10,8 +10,15 @@
 typedef struct s_task           t_task;
 typedef struct s_thread         t_thread;
 typedef struct s_thread_pool    t_thread_pool;
+typedef struct s_locker         t_locker;
+
 
 typedef void   *(*action)(void *);
+
+struct s_locker {
+    pthread_mutex_t lock;
+    pthread_cond_t  cond;
+};
 
 struct s_thread_pool {
     int             id;
@@ -20,6 +27,9 @@ struct s_thread_pool {
     t_thread        **threads;
     int             len;
     int             nb_tasks;
+    t_locker        locker;
+    int             thread_alive;
+    int             thread_working;
  };
 
 struct s_thread {
@@ -31,6 +41,7 @@ struct s_task {
     t_task          *next;
     void            (*handle)(void *);
     void            *arg;
+    t_thread_pool   *pool;
 };
 
 /*

@@ -5,6 +5,24 @@ void    destroy_worker(t_task *task)
     free(task);
 }
 
+void    destroy_tasks(t_tasks *tasks)
+{
+    t_task  *tmp;
+
+    if (!tasks)
+    {
+        return;
+    }
+    tmp = NULL;
+    while (tasks->node)
+    {   
+        tmp = tasks->node;
+        tasks->node = tasks->node->next;   
+        free(tmp);
+    }
+    free(tasks);
+}
+
 int    add_worker(t_thread_pool *pool, void (*handle)(void *), void *arg)
 {
     t_task  *task;
@@ -16,12 +34,10 @@ int    add_worker(t_thread_pool *pool, void (*handle)(void *), void *arg)
     task->pool = pool;
     task->handle = handle;
     task->arg = arg;
-    task->next = pool->tasks;
-    pool->tasks = task;
-    pool->nb_tasks++;
-    usleep(1);
-    pthread_cond_signal(&pool->locker.cond);
-    pthread_mutex_unlock(&pool->locker.lock);
+    task->next = pool->tasks->node;
+    pool->tasks->node = task;
+    pool->tasks->len++;
+    post_pool(&pool->tasks->locker);
     return (1);
 }
 
@@ -29,14 +45,15 @@ t_task  *pull_task(t_thread_pool *pool)
 {
     t_task  *tasks;
 
-    tasks = pool->tasks;
-    if (pool->tasks)
+    tasks = pool->tasks->node;
+    pool->tasks->len--;
+    if (pool->tasks->node)
     {
-        pool->tasks = pool->tasks->next;
+        pool->tasks->node = pool->tasks->node->next;
     }
     if (tasks)
     {
-        pool->nb_tasks--;
+        post_pool(&pool->tasks->locker);
     }
     return (tasks);
 }

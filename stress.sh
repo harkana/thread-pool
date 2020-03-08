@@ -2,7 +2,8 @@
 
 i=0
 
-for i in {1..100}
+for i in {1..500}
 do
-    make re && ./test_thread_pool
+    a=$(./test_thread_pool)
+    echo $?
 done

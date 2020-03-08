@@ -3,7 +3,8 @@ CC=gcc
 SRC=	main.c \
 		thread.c \
 		task.c \
-		thread_pool.c
+		thread_pool.c \
+		locker.c
 CFLAGS=-std=c99
 OBJ=$(SRC:%.c=%.o)
 

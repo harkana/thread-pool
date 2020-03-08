@@ -6,14 +6,14 @@ int     count = 0;
 
 void    func1()
 {
-    printf("Hello world ! %d\n", (int)pthread_self());
+    printf("Hello world ! %d\n", count);
     count++;
    // printf("thread id: %d\n", (int)pthread_self());
 }
 
 void    func2()
 {
-    printf("Salut les gens ! %d\n", (int)pthread_self());
+    printf("Salut les gens ! %d\n", count);
     count++;
     //printf("thread id: %d\n", (int)pthread_self());
 }

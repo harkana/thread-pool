@@ -5,30 +5,6 @@ void    destroy_thread(t_thread *thread)
     free(thread);
 }
 
-/*
-int     threads_on_hold = 0;
-*/
-
-/*
-void thpool_resume(t_thread_pool* thpool_p) {
-    // resuming a single threadpool hasn't been
-    // implemented yet, meanwhile this supresses
-    // the warnings
-    (void)thpool_p;
-
-	threads_on_hold = 0;
-}
-
-
-static void thread_hold(int sig_id) {
-    (void)sig_id;
-	threads_on_hold = 1;
-	while (threads_on_hold){
-		sleep(1);
-	}
-}
-*/
-
 void    running_thread(t_thread *thread)
 {
     pthread_mutex_lock(&thread->pool->locker.lock);

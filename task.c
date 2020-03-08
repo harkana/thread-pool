@@ -45,6 +45,8 @@ t_task  *pull_task(t_thread_pool *pool)
 {
     t_task  *tasks;
 
+    tasks = NULL;
+    pthread_mutex_lock(&pool->tasks->locker.lock);
     tasks = pool->tasks->node;
     pool->tasks->len--;
     if (pool->tasks->node)
@@ -55,5 +57,6 @@ t_task  *pull_task(t_thread_pool *pool)
     {
         post_pool(&pool->tasks->locker);
     }
+    pthread_mutex_unlock(&pool->tasks->locker.lock);
     return (tasks);
 }

@@ -5,7 +5,7 @@ SRC=	main.c \
 		task.c \
 		thread_pool.c \
 		locker.c
-CFLAGS=-std=c99
+CFLAGS=-W -Wall -Werror -Wextra -std=c99
 OBJ=$(SRC:%.c=%.o)
 
 all:$(OBJ)
